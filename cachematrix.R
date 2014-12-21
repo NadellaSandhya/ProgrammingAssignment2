@@ -12,19 +12,19 @@
 
 
 
-makeCacheMatrix <- function(x = matrix())
+makeCacheMatrix <- function(A = matrix())
 {
-  inv <- NULL
-  set <- function(y)                               # The special matrix is assigned to "set"
+  M <- NULL
+  set <- function(B)                               # The special matrix is assigned to "set"
   {
-    x <<- y
-    inv <<- NULL
+    A <<- B
+    M <<- NULL
   }
-  get <- function() x                              # The value of the matrix is assigned to "get"
-  setinverse <- function(inverse) inv <<- inverse  # inverse of the matrix is calculated
-  getinverse <- function() inv                     # Inverse of the matrix is stored in "getinverse"
+  get <- function() A                              # The value of the matrix is assigned to "get"
+  setmatrix<-function(solve) M<<- solve            # inverse of the matrix is calculated
+  getmatrix<-function() M                          # Inverse of the matrix is stored in "getinverse"
   list(set=set, get=get, 
-       setinverse=setinverse, getinverse=getinverse)	 
+       setmatrix=setmatrix, getmatrix=getmatrix)	 
 }
 
 
@@ -36,16 +36,16 @@ makeCacheMatrix <- function(x = matrix())
 #  that the matrix is always invertible.
 
 
-cacheSolve <- function(x, ...) 
+cacheSolve <- function(A=matrix(), ...) 
 {
-  inv <- x$getinverse()               # checks cache globally to see if inverse already exists
-  if(!is.null(inv))                   # condition is true if it finds an inverse in cache
+  M<-A$getmatrix()                    # checks cache globally to see if inverse already exists
+  if(!is.null(M))                     # condition is true if it finds an inverse in cache
   {
     message("getting cached data.")   # A message "getting cached data." is displayed
-    return(inv)                       # outputs matrix invers and gets out of the function
+    return(M)                         # outputs matrix invers and gets out of the function
   }
-  data <- x$get()                     # get the matrix in to "data"
-  inv <- solve(data)                  # solve is user to calculate the inverse
-  x$setinverse(inv)						
-  inv                                 # Inverse of the matrix is outputted
+  matrix <- A$get()                   # get the matrix in to "data"
+  M <- solve(matrix, ...)             # solve is user to calculate the inverse
+  A$setmatrix(M)					
+  M                                   # Inverse of the matrix is outputted
 }
